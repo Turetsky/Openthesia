@@ -39,7 +39,13 @@ public class HomeWindow : ImGuiWindow
 
         using (AutoFont titleFont = new(FontController.Title))
         {
-            var textPos = new Vector2(ImGui.GetIO().DisplaySize.X / 2 - ImGui.CalcTextSize(_title).X / 2, ImGui.GetIO().DisplaySize.Y / 10);
+            Vector2 textSize = ImGui.CalcTextSize(_title);
+            float logoTop = (_io.DisplaySize.Y / 2f) - ImGuiUtils.FixedSize(new Vector2(0, 300)).Y;
+            float margin = ImGuiUtils.FixedSize(new Vector2(0, 24)).Y;
+            float titleY = logoTop - textSize.Y - margin;
+            if (titleY < 0)
+                return; // not enough room above the logo, skip
+            var textPos = new Vector2(_io.DisplaySize.X / 2 - textSize.X / 2, titleY);
             ImGui.SetCursorPos(textPos + _titleShadowOffset);
             ImGui.GetWindowDrawList().AddText(textPos + _titleShadowOffset, _titleShadowColor, _title);
             ImGui.SetCursorPos(textPos);
